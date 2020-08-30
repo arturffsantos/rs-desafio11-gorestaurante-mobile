@@ -35,6 +35,7 @@ interface Food {
   price: number;
   thumbnail_url: string;
   formattedPrice: string;
+  category: number;
 }
 
 interface Category {
@@ -61,7 +62,11 @@ const Dashboard: React.FC = () => {
     async function loadFoods(): Promise<void> {
       const { data } = await api.get<Food[]>('foods');
 
-      setFoods(data);
+      setFoods(
+        selectedCategory
+          ? data.filter(food => food.category === selectedCategory)
+          : data,
+      );
     }
 
     loadFoods();
@@ -78,7 +83,7 @@ const Dashboard: React.FC = () => {
   }, []);
 
   function handleSelectCategory(id: number): void {
-    // Select / deselect category
+    setSelectedCategory(selectedCategory === id ? undefined : id);
   }
 
   return (
