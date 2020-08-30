@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image, ScrollView, Alert } from 'react-native';
+import { Image, ScrollView } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
@@ -60,13 +60,14 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     async function loadFoods(): Promise<void> {
-      const { data } = await api.get<Food[]>('foods');
+      const { data } = await api.get<Food[]>('foods', {
+        params: {
+          name_like: searchValue,
+          category_like: selectedCategory,
+        },
+      });
 
-      setFoods(
-        selectedCategory
-          ? data.filter(food => food.category === selectedCategory)
-          : data,
-      );
+      setFoods(data);
     }
 
     loadFoods();
