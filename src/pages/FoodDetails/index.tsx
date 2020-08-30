@@ -57,6 +57,8 @@ interface Food {
   price: number;
   image_url: string;
   formattedPrice: string;
+  category: number;
+  thumbnail_url: string;
   extras: Extra[];
 }
 
@@ -113,8 +115,18 @@ const FoodDetails: React.FC = () => {
     setFoodQuantity(foodQuantity > 1 ? foodQuantity - 1 : 1);
   }
 
-  const toggleFavorite = useCallback(() => {
-    // Toggle if food is favorite or not
+  const toggleFavorite = useCallback(async () => {
+    await api.post('favorites', {
+      id: food.id,
+      name: food.name,
+      description: food.description,
+      price: food.price,
+      category: food.category,
+      image_url: food.image_url,
+      thumbnail_url: food.thumbnail_url,
+    });
+
+    setIsFavorite(!isFavorite);
   }, [isFavorite, food]);
 
   const cartTotal = useMemo(() => {
